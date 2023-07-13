@@ -94,7 +94,7 @@ class Register extends React.Component {
             component="button"
             style={{ fontFamily: "inherit", fontSize: "inherit" }}
             onClick={() => {
-              this.props.navigate("/");
+              this.props.navigate("/login");
             }}
           >
             Login
