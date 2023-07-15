@@ -1,51 +1,71 @@
 import React, { Component } from "react";
-import swal from "sweetalert";
 import { Button, TextField, Link } from "@material-ui/core";
 import { withRouter } from "./utils";
-const axios = require("axios");
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-class Register extends React.Component {
+class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: '',
-      confirm_password: ''
+      username: "",
+      password: "",
+      confirm_password: "",
     };
   }
 
   onChange = (e) => this.setState({ [e.target.name]: e.target.value });
 
-  register = () => {
+  register = async () => {
+    try {
+      const response = await axios.post("http://localhost:2000/register", {
+        username: this.state.username,
+        password: this.state.password,
+      });
 
-    axios.post('http://localhost:2000/register', {
-      username: this.state.username,
-      password: this.state.password,
-    }).then((res) => {
-      swal({
-        text: res.data.title,
-        icon: "success",
-        type: "success"
-      });
-      // this.props.history.push('/');
+      toast.success(response.data.title);
       this.props.navigate("/login");
-    }).catch((err) => {
-      swal({
-        text: err.response.data.errorMessage,
-        icon: "error",
-        type: "error"
-      });
-    });
-  }
+    } catch (error) {
+      console.error(error);
+      let errorMessage = "An error occurred. Please try again later.";
+
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.errorMessage
+      ) {
+        errorMessage = error.response.data.errorMessage;
+      }
+
+      toast.error(errorMessage);
+    }
+  };
+
 
   render() {
     return (
-      <div style={{ marginTop: '200px' }}>
-        <div>
-          <h2>Register</h2>
-        </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          backgroundColor: "#f5f5f5",
+          
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "#fff",
+            padding: "20px",
+            borderRadius: "4px",
+            boxShadow: "2px 10px 20px rgba(0, 0, 0, 0.3)",
+            width:'30%'
+          }}
+        >
 
-        <div>
+        <h1 style={{ fontSize: "35px", marginBottom: "30px" }}>Register</h1>
           <TextField
             id="standard-basic"
             type="text"
@@ -55,8 +75,16 @@ class Register extends React.Component {
             onChange={this.onChange}
             placeholder="User Name"
             required
+            inputProps = {
+              {
+                style: {
+                  fontSize: "16px"
+                }
+              }
+            }
           />
-          <br /><br />
+          <br />
+          <br />
           <TextField
             id="standard-basic"
             type="password"
@@ -66,8 +94,16 @@ class Register extends React.Component {
             onChange={this.onChange}
             placeholder="Password"
             required
+            inputProps = {
+              {
+                style: {
+                  fontSize: "16px"
+                }
+              }
+            }
           />
-          <br /><br />
+          <br />
+          <br />
           <TextField
             id="standard-basic"
             type="password"
@@ -77,29 +113,44 @@ class Register extends React.Component {
             onChange={this.onChange}
             placeholder="Confirm Password"
             required
+            inputProps = {
+              {
+                style: {
+                  fontSize: "16px"
+                }
+              }
+            }
           />
-          <br /><br />
+          <br />
+          <br />
+          <br />
           <Button
             className="button_style"
             variant="contained"
             color="primary"
             size="small"
-            disabled={this.state.username == '' && this.state.password == ''}
+            disabled={this.state.username === "" || this.state.password === ""}
             onClick={this.register}
+            style={{fontSize:'20px'}}
           >
             Register
-          </Button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </Button>
+          <br />{" "}
+          <br />
+          
+          
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <Link
-            // href="/"
             component="button"
-            style={{ fontFamily: "inherit", fontSize: "inherit" }}
+            style={{ fontFamily: "inherit", fontSize: '21px' }}
             onClick={() => {
-              this.props.navigate("/");
+              this.props.navigate("/login");
             }}
           >
-            Login
+            LOGIN
           </Link>
         </div>
+        <ToastContainer position="top-center" autoClose={3000} />
       </div>
     );
   }

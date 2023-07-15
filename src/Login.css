@@ -6,12 +6,15 @@ body {
 .button_style {
   margin-left: 10px !important;
   margin-right: 10px;
+  color: #3f51b5;;
 }
 
 .centerTable {
   margin: 0px auto;
 }
 
-h2 {
+h1 {
     color: #3f51b5;
+    
 }
+
